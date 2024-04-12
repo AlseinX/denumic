@@ -1,0 +1,38 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  bump-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Bump version
+        run: 'cargo install vproj && vproj ${GITHUB_REF##*/} && git add . && git -c user.name="AlseinX" -c user.email="xyh951115@live.com" commit -am "chore: bump release version ${GITHUB_REF##*/}"'
+
+      - name: Run cargo fmt
+        run: cargo fmt --check --verbose
+
+      - name: Run cargo clippy
+        run: cargo clippy --verbose
+
+      - name: Run tests
+        run: cargo test --verbose
+
+      - name: Publish
+        id: publish-crates
+        uses: katyo/publish-crates@v2
+        with:
+          registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+      - name: Publish Result
+        if: fromJSON(steps.publish-crates.outputs.published).*
+        run: |
+          LIST="${{ join(fromJSON(steps.publish-crates.outputs.published).*.name, ', ') }}"
+          echo "Published crates: $LIST"
