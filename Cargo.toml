@@ -1,0 +1,20 @@
+[package]
+name = "denumic"
+version = "0.0.0"
+description = "Creating enum-based runtime dispatched traits"
+homepage = "https://github.com/AlseinX/denumic"
+repository = "https://github.com/AlseinX/denumic"
+documentation = "https://docs.rs/denumic"
+readme = "README.md"
+keywords = ["trait", "dynamic", "high-performance"]
+license-file = "LICENSE"
+authors = ["AlseinX <xyh951115@live.com>"]
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1"
+syn = { version = "2", features = ["full"] }
+quote = "1"
